@@ -26,9 +26,9 @@ or
 
 ## Usage
 
-![Screenshot](screenshots/google-vs-chatgpt.png?raw=true)
+![Screenshot](screenshots/english.png?raw=true)
 
-![Screenshot](screenshots/extension-google.png?raw=true)
+![Screenshot](screenshots/chinese.png?raw=true)
 
 ## Contributing
 
