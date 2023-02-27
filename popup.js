@@ -66,48 +66,56 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 const sendMessage = async () => {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  })
-  const response = await chrome.tabs.sendMessage(tab.id, {
-    action: 'summarize',
-  })
-  const content = response.content
-  console.log(content)
+  try {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    })
+    const response = await chrome.tabs.sendMessage(tab.id, {
+      action: 'summarize',
+    })
+    const content = response.content
 
-  let summary = ''
-  let flag = true
+    let summary = ''
+    let flag = true
 
-  // if words is empty, return
-  if (!content.length || !content.trim().length) {
-    flag = false
-    summary = 'Web page content is empty'
+    // if words is empty, return
+    if (!content.length || !content.trim().length) {
+      flag = false
+      summary = 'Web page content is empty'
+    }
+
+    if (flag) summary = await requestGPTAPI(content.trim(), 1)
+
+    return summary
+  } catch (error) {
+    return error.message + ' Refresh the page and try again'
   }
-
-  if (flag) summary = await requestGPTAPI(content.trim(), 1)
-
-  return summary
 }
 
 // a function to request GPT API and get the repsonse
 async function requestGPTAPI(content, completions) {
-  console.log('content' + content)
-  const result = await readSyncStorage('apiKey')
-  console.log('result' + result)
-  const apiKey = result.trim()
+  const apiKey = await readSyncStorage('apiKey')
 
   // is apiKey is empty, return
-  if (!apiKey || !apiKey.length) {
+  if (!apiKey || !apiKey.trim().length) {
     return 'Please enter your API key'
   }
 
+  // remove all the new line characters
+  content = content
+    .replace(/(\r\n|\n|\r)/gm, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+
   const language = document.getElementById('languages').value
-  const promptTemplate = `Please provide a brief summary in ${language} of the following contents in 300 characters, with nothing before the paragraph:`
+  const promptTemplate = `Please briefly summarize the following in ${language}:`
   const prompt = `${promptTemplate}\n${content}`
+  console.log('prompt: ' + prompt)
   const url = 'https://api.openai.com/v1/completions'
   const data = {
-    model: 'text-babbage-001',
+    // model: 'text-curie-001',
+    model: 'text-davinci-003',
     prompt: prompt,
     max_tokens: 1000,
     temperature: 0.8,
@@ -117,7 +125,7 @@ async function requestGPTAPI(content, completions) {
     n: completions,
   }
   const headers = {
-    Authorization: `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey.trim()}`,
     'Content-Type': 'application/json',
   }
   try {
@@ -159,14 +167,27 @@ function storeApiKey() {
   }
 }
 
+// const readSyncStorage = async (key) => {
+//   return new Promise((resolve, reject) => {
+//     chrome.storage.sync.get([key], function (result) {
+//       if (result[key] === undefined) {
+//         reject()
+//       } else {
+//         resolve(result[key])
+//       }
+//     })
+//   })
+// }
+
 const readSyncStorage = async (key) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get([key], function (result) {
-      if (result[key] === undefined) {
-        reject()
-      } else {
+    chrome.storage.sync
+      .get([key])
+      .then((result) => {
         resolve(result[key])
-      }
-    })
+      })
+      .catch((error) => {
+        reject(error)
+      })
   })
 }
