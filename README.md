@@ -17,7 +17,7 @@ To use the extension, you'll need to have a GPT-3 API key. You can sign up for a
 
 or
 
-- Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/word-study-extension/doekklopilgpgcnbpfcehjhegdpnlbmh) page for the Word Study extension.
+- Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/summarizeit/dpnomnajbhmkdinnklciapkgcacihmnl) page for the Word Study extension.
 - Click on the "Add to Chrome" button on the top right corner of the page.
 - A pop-up window will appear, click on "Add Extension" to confirm the installation.
 - The Word Study extension should now be installed and can be accessed from the Chrome toolbar.
