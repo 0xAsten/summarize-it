@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   console.log('content:' + content)
 
   if (!content || content.trim().length === 0) {
+    document.getElementById('main-page').classList.remove('hidden')
     loadMainPage()
   } else {
+    document.getElementById('main').classList.add('api-key-hint')
     document.getElementById('main').innerHTML = 'processing...'
     requestGPTAPI(content.trim(), 1).then((summary) => {
       document.getElementById('main').innerHTML = summary
