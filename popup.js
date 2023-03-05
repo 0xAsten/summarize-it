@@ -1,4 +1,25 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  })
+  const response = await chrome.tabs.sendMessage(tab.id, {
+    action: 'summarize-selection',
+  })
+  const content = response.content
+  console.log('content:' + content)
+
+  if (!content || content.trim().length === 0) {
+    loadMainPage()
+  } else {
+    document.getElementById('main').innerHTML = 'processing...'
+    requestGPTAPI(content.trim(), 1).then((summary) => {
+      document.getElementById('main').innerHTML = summary
+    })
+  }
+})
+
+function loadMainPage() {
   var editIcon = document.getElementById('editIcon')
   var saveIcon = document.getElementById('saveIcon')
   editIcon.addEventListener('click', function () {
@@ -14,11 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // get user's api key from storage and render it to the apiKeyStored span
   chrome.storage.sync.get(['apiKey'], function (result) {
     const apiKey = result.apiKey
-    document.getElementById('apiKeyStored').textContent =
-      retainThreeCharacters(apiKey)
     if (!apiKey) {
       editIcon.parentElement.classList.add('hidden')
       saveIcon.parentElement.classList.remove('hidden')
+    } else {
+      document.getElementById('apiKeyStored').textContent =
+        retainThreeCharacters(apiKey)
     }
   })
 
@@ -63,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     summarizeButton.innerText = 'Summarize In ' + language
     summarizeThisPageButton.innerText = 'Summarize This Page In ' + language
   })
-})
+}
 
 const sendMessage = async () => {
   try {
@@ -99,7 +121,8 @@ async function requestGPTAPI(content, completions) {
 
   // is apiKey is empty, return
   if (!apiKey || !apiKey.trim().length) {
-    return 'Please enter your API key'
+    return `<div id="api-key-hint"><p>Please enter your API key in the designated field. </p>
+    <p>If you are not in the main popup, please cancel the page selection and re-click the extension icon to access the popup.</p></div>`
   }
 
   // remove all the new line characters

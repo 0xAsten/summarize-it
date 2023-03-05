@@ -10,17 +10,22 @@
     "128": "./img/icons/icon128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab", 
+    "scripting"
   ],
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["content.js"]
+      "js": ["content.js", "content_selection.js"]
     }
   ],
   "action": {
     "default_icon": "./img/icons/icon32.png",
     "default_title": "Summarize Extension",
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   }
 }

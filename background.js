@@ -9,4 +9,15 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     )
     return true
   }
+
+  if (message.action === 'summarize-selection') {
+    chrome.tabs.executeScript(
+      sender.tab.id,
+      { file: 'content_selection.js' },
+      function () {
+        chrome.tabs.sendMessage(sender.tab.id, message, sendResponse)
+      }
+    )
+    return true
+  }
 })

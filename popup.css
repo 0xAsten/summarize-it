@@ -143,3 +143,20 @@ ul {
 	font-size: 12px;
 	color: #8f2424;
 }
+
+#api-key-hint {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 10000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	color: #000;
+	border: 2px solid #000;
+	border-radius: 10px;
+	padding: 10px;
+	font-size: 16px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
