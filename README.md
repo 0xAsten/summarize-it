@@ -2,6 +2,22 @@
 
 Summarize is a powerful and easy-to-use Chrome extension that lets you quickly obtain a summary of content. Powered by advanced natural language processing technology, Summarize uses GPT-3 API to generate accurate and concise summaries of the most important information, so you can get the gist of it in seconds.
 
+## Features
+
+- Select text on web pages and summarize it using advanced language models.
+- Support for multiple languages, including English, Chinese, Spanish, and more.
+- Formatted output in a bulleted list for easy reading.
+- User-friendly prompt to guide users in providing high-quality input.
+- No more than 3-5 sentences long output for concise and coherent summaries.
+- Improved output format, now providing better readability.
+
+## How to Use
+
+1. Install the Summary Extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/summarizeit/dpnomnajbhmkdinnklciapkgcacihmnl).
+2. Click on the extension icon in the toolbar.
+3. If you want to summarize a specific part of a web page, select the text and click on the extension icon.
+4. View the formatted output summary.
+
 ## Getting Started
 
 To use the extension, you'll need to have a GPT-3 API key. You can sign up for an API key on the OpenAI website. Once you have your API key, save it to Word Study Extension:
@@ -26,9 +42,15 @@ or
 
 ## Usage
 
-![Screenshot](screenshots/english.png?raw=true)
+![Screenshot](screenshots/EN-EN.png)
 
-![Screenshot](screenshots/chinese.png?raw=true)
+![Screenshot](screenshots/EN-SPA.png)
+
+![Screenshot](screenshots/EN-KOR.png)
+
+![Screenshot](screenshots/EN-CH.png)
+
+![Screenshot](screenshots/CH-CH.png)
 
 ## Contributing
 
