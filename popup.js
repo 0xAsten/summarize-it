@@ -176,9 +176,22 @@ async function requestGPTAPI(content, completions) {
       throw new Error(res.error.message)
     }
     // console.log(res.choices[0]['message'])
-    return res.choices[0]['message']['content']
+
+    const content = res.choices[0]['message']['content']
+    // format the content wrap it in a list according to new line characters and point numbers
+    const formattedContent = content.split('\n').map(wrapInXML).join('')
+    return `<ul class='response-content'>${formattedContent}</ul>`
   } catch (error) {
     return `OpenAI API Error: ${error.message}`
+  }
+}
+
+function wrapInXML(para) {
+  // if the para starts with a number and a dot, wrap it in a list item
+  if (para.match(/^\d+\./)) {
+    return `<li>${para}</li>`
+  } else {
+    return `<p>${para}</p>`
   }
 }
 
