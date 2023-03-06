@@ -42,15 +42,15 @@ or
 
 ## Usage
 
-![Screenshot](screenshots/EN-EN.png)
+![Screenshot](screenshots/EN-EN.png?raw=true)
 
-![Screenshot](screenshots/EN-SPA.png)
+![Screenshot](screenshots/EN-SPA.png?raw=true)
 
-![Screenshot](screenshots/EN-KOR.png)
+![Screenshot](screenshots/EN-KOR.png?raw=true)
 
-![Screenshot](screenshots/EN-CH.png)
+![Screenshot](screenshots/EN-CH.png?raw=true)
 
-![Screenshot](screenshots/CH-CH.png)
+![Screenshot](screenshots/CH-CH.png?raw=true)
 
 ## Contributing
 
