@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     action: 'summarize-selection',
   })
   const content = response.content
-  console.log('content:' + content)
+  // console.log('content:' + content)
 
   if (!content || content.trim().length === 0) {
     document.getElementById('main-page').classList.remove('hidden')
@@ -145,19 +145,19 @@ async function requestGPTAPI(content, completions) {
     .trim()
 
   const language = document.getElementById('languages').value
-  const promptTemplate = `Please briefly summarize the following in ${language}:`
+  const system_content =
+    'You are a helpful assistant that can analyze text input and generate a concise and coherent summary that captures the main points of the input.'
+  const promptTemplate = `Please summarize the following text, using ${language} only. You may include a brief introduction and conclusion if necessary. Your summary should be no more than 3-5 sentences long and should be in a list format, with each point numbered or bulleted:`
   const prompt = `${promptTemplate}\n${content}`
-  console.log('prompt: ' + prompt)
-  const url = 'https://api.openai.com/v1/completions'
+  const messages = [
+    { role: 'system', content: system_content },
+    { role: 'user', content: prompt },
+  ]
+  // console.log('messages: ' + messages)
+  const url = 'https://api.openai.com/v1/chat/completions'
   const data = {
-    // model: 'text-curie-001',
-    model: 'text-davinci-003',
-    prompt: prompt,
-    max_tokens: 1000,
-    temperature: 0.8,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    model: 'gpt-3.5-turbo',
+    messages: messages,
     n: completions,
   }
   const headers = {
@@ -175,8 +175,8 @@ async function requestGPTAPI(content, completions) {
     if (response.status !== 200) {
       throw new Error(res.error.message)
     }
-
-    return res.choices[0].text
+    // console.log(res.choices[0]['message'])
+    return res.choices[0]['message']['content']
   } catch (error) {
     return `OpenAI API Error: ${error.message}`
   }
