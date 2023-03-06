@@ -131,8 +131,11 @@ async function requestGPTAPI(content, completions) {
 
   // is apiKey is empty, return
   if (!apiKey || !apiKey.trim().length) {
-    return `<div id="api-key-hint"><p>Please enter your API key in the designated field. </p>
-    <p>If you are not in the main popup, please cancel the page selection and re-click the extension icon to access the popup.</p></div>`
+    return `Please enter your API key in the designated field. You can get your API key from https://openai.com/`
+  }
+
+  if (!content || !content.trim().length) {
+    return 'text is empty'
   }
 
   // remove all the new line characters
