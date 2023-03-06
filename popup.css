@@ -11,6 +11,7 @@ body {
 .api-key-hint {
 	/* bottom: 20px;
 	right: 20px; */
+	margin-top: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;

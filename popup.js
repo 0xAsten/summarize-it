@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
+  loadMain()
+
   const [tab] = await chrome.tabs.query({
     active: true,
     currentWindow: true,
@@ -13,15 +15,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('main-page').classList.remove('hidden')
     loadMainPage()
   } else {
-    document.getElementById('main').classList.add('api-key-hint')
-    document.getElementById('main').innerHTML = 'processing...'
+    document.getElementById('side-page').innerHTML = 'processing...'
+    document.getElementById('side-page').classList.remove('hidden')
     requestGPTAPI(content.trim(), 1).then((summary) => {
-      document.getElementById('main').innerHTML = summary
+      document.getElementById('side-page').innerHTML = summary
     })
   }
 })
 
-function loadMainPage() {
+function loadMain() {
   var editIcon = document.getElementById('editIcon')
   var saveIcon = document.getElementById('saveIcon')
   editIcon.addEventListener('click', function () {
@@ -46,6 +48,30 @@ function loadMainPage() {
     }
   })
 
+  const summarizeButton = document.getElementById('summarize-button')
+  const summarizeThisPageButton = document.getElementById(
+    'summarize-this-page-button'
+  )
+  const languageSelect = document.getElementById('languages')
+  languageSelect.addEventListener('change', function () {
+    chrome.storage.sync.set({ language: languageSelect.value }, function () {
+      summarizeButton.innerText = 'Summarize In ' + languageSelect.value
+      summarizeThisPageButton.innerText =
+        'Summarize This Page In ' + languageSelect.value
+    })
+  })
+
+  chrome.storage.sync.get(['language'], function (result) {
+    let language = result.language
+    if (!language) language = 'English'
+
+    languageSelect.value = language
+    summarizeButton.innerText = 'Summarize In ' + language
+    summarizeThisPageButton.innerText = 'Summarize This Page In ' + language
+  })
+}
+
+function loadMainPage() {
   const summarizeThisPageButton = document.getElementById(
     'summarize-this-page-button'
   )
@@ -68,24 +94,6 @@ function loadMainPage() {
       summarizeButton.disabled = false
       document.getElementById('summary').innerHTML = summary
     })
-  })
-
-  const languageSelect = document.getElementById('languages')
-  languageSelect.addEventListener('change', function () {
-    chrome.storage.sync.set({ language: languageSelect.value }, function () {
-      summarizeButton.innerText = 'Summarize In ' + languageSelect.value
-      summarizeThisPageButton.innerText =
-        'Summarize This Page In ' + languageSelect.value
-    })
-  })
-
-  chrome.storage.sync.get(['language'], function (result) {
-    let language = result.language
-    if (!language) language = 'English'
-
-    languageSelect.value = language
-    summarizeButton.innerText = 'Summarize In ' + language
-    summarizeThisPageButton.innerText = 'Summarize This Page In ' + language
   })
 }
 

@@ -6,23 +6,22 @@
   </head>
   <body>
     <section id="main">
-      <div id="main-page" class="hidden">
-        <div class="header">
-          <img class="logo" src="./img/icons/icon128.png" alt="" />
-          <select class="languages" id="languages">
-            <option value="English">English</option>
-            <option value="Chinese">Chinese</option>
-          </select>
-          <div class="apikey">
-            <div id="apiKeyStored"><span>Edit GPT3 API Key</span></div>
-            <img class="icon" id="editIcon" src="./img/icons/edit.png" alt="" />
-          </div>
-          <div class="apikey hidden">
-            <input type="text" id="apiKey" placeholder="GPT3 API Key" />
-            <img class="icon" id="saveIcon" src="./img/icons/save.png" alt="" />
-          </div>
+      <div class="header">
+        <img class="logo" src="./img/icons/icon128.png" alt="" />
+        <select class="languages" id="languages">
+          <option value="English">English</option>
+          <option value="Chinese">Chinese</option>
+        </select>
+        <div class="apikey">
+          <div id="apiKeyStored"><span>Edit GPT3 API Key</span></div>
+          <img class="icon" id="editIcon" src="./img/icons/edit.png" alt="" />
         </div>
-
+        <div class="apikey hidden">
+          <input type="text" id="apiKey" placeholder="GPT3 API Key" />
+          <img class="icon" id="saveIcon" src="./img/icons/save.png" alt="" />
+        </div>
+      </div>
+      <div id="main-page" class="hidden">
         <div class="inputForm">
           <input type="text" id="wordInput" placeholder="Words" />
           <button class="fullwithButton" id="summarize-button">
@@ -56,6 +55,8 @@
           problem. It is recommended to paste in sections.
         </p>
       </div>
+
+      <div id="side-page" class="hidden api-key-hint"></div>
     </section>
 
     <script src="popup.js"></script>
