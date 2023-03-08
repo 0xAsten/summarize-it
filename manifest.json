@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SummarizeIt",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Summarize any webpage with GPT-3 API.",
   "icons": {
     "16": "./img/icons/icon16.png",
