@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   } else {
     document.getElementById('side-page').innerHTML = 'processing...'
     document.getElementById('side-page').classList.remove('hidden')
-    requestGPTAPI(content.trim(), 1).then((summary) => {
-      document.getElementById('side-page').innerHTML = summary
-    })
+    requestGPTAPI(content.trim(), 1, 'side-page')
   }
 })
 
@@ -90,9 +88,9 @@ function loadMainPage() {
     summarizeButton.disabled = true
     document.getElementById('summary').innerHTML = 'processing...'
 
-    requestGPTAPI(words.trim(), 1).then((summary) => {
+    requestGPTAPI(words.trim(), 1, 'summary').then((summary) => {
       summarizeButton.disabled = false
-      document.getElementById('summary').innerHTML = summary
+      // document.getElementById('summary').innerHTML = summary
     })
   })
 }
@@ -117,7 +115,7 @@ const sendMessage = async () => {
       summary = 'Web page content is empty'
     }
 
-    if (flag) summary = await requestGPTAPI(content.trim(), 1)
+    if (flag) summary = await requestGPTAPI(content.trim(), 1, 'summary')
 
     return summary
   } catch (error) {
@@ -126,7 +124,7 @@ const sendMessage = async () => {
 }
 
 // a function to request GPT API and get the repsonse
-async function requestGPTAPI(content, completions) {
+async function requestGPTAPI(content, completions, ele) {
   const apiKey = await readSyncStorage('apiKey')
 
   // is apiKey is empty, return
@@ -155,10 +153,11 @@ async function requestGPTAPI(content, completions) {
   ]
   // console.log('messages: ' + messages)
   const url = 'https://api.openai.com/v1/chat/completions'
-  const data = {
+  const body = {
     model: 'gpt-3.5-turbo',
     messages: messages,
     n: completions,
+    stream: true,
   }
   const headers = {
     Authorization: `Bearer ${apiKey.trim()}`,
@@ -168,21 +167,53 @@ async function requestGPTAPI(content, completions) {
     const response = await fetch(url, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     })
 
-    const res = await response.json()
-    if (response.status !== 200) {
-      throw new Error(res.error.message)
-    }
-    // console.log(res.choices[0]['message'])
+    // const res = await response.json()
+    // if (response.status !== 200) {
+    //   throw new Error(res.error.message)
+    // }
 
-    const content = res.choices[0]['message']['content']
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder('utf-8')
+    let content = ''
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
+      // split the response by data: and get the last part
+      console.log(decoder.decode(value))
+      const dataArry = decoder.decode(value).split('data:')
+      // iterate dataArry and get the last part
+      for (data of dataArry) {
+        if (
+          typeof data === 'string' &&
+          data.trim().length > 0 &&
+          data.trim().startsWith('{')
+        ) {
+          const dataObj = JSON.parse(data)
+          const dataConetent = dataObj.choices[0].delta.content
+          if (dataConetent) content += dataConetent
+        }
+      }
+      const formattedContent = content.split('\n').map(wrapInXML).join('')
+
+      document.getElementById(
+        ele
+      ).innerHTML = `<ul class='response-content'>${formattedContent}</ul>`
+    }
+
+    // content = res.choices[0]['message']['content']
     // format the content wrap it in a list according to new line characters and point numbers
-    const formattedContent = content.split('\n').map(wrapInXML).join('')
-    return `<ul class='response-content'>${formattedContent}</ul>`
+    // const formattedContent = content.split('\n').map(wrapInXML).join('')
+    return true
   } catch (error) {
-    return `OpenAI API Error: ${error.message}`
+    document.getElementById(
+      ele
+    ).innerHTML = `OpenAI API Error: ${error.message}`
+    return false
   }
 }
 
