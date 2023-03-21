@@ -78,7 +78,9 @@ function loadMainPage() {
     document.getElementById('summary').innerHTML = 'processing...'
     sendMessage().then((summary) => {
       summarizeThisPageButton.disabled = false
-      document.getElementById('summary').innerHTML = summary
+      if (typeof summary === 'string') {
+        document.getElementById('summary').innerHTML = summary
+      }
     })
   })
 
@@ -137,7 +139,7 @@ async function requestGPTAPI(content, completions, ele) {
 
   if (!content || !content.trim().length) {
     document.getElementById(ele).innerHTML = 'text is empty'
-    return flase
+    return false
   }
 
   // remove all the new line characters
