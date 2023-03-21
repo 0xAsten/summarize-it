@@ -176,13 +176,14 @@ async function requestGPTAPI(content, completions, ele) {
       body: JSON.stringify(body),
     })
 
-    // const res = await response.json()
-    // if (response.status !== 200) {
-    //   throw new Error(res.error.message)
-    // }
-
     const reader = response.body.getReader()
     const decoder = new TextDecoder('utf-8')
+    if (response.status !== 200) {
+      const { _, value } = await reader.read()
+      const error = JSON.parse(decoder.decode(value))
+      throw new Error(error.error.message)
+    }
+
     let content = ''
     while (true) {
       const { done, value } = await reader.read()
@@ -190,7 +191,7 @@ async function requestGPTAPI(content, completions, ele) {
         break
       }
       // split the response by data: and get the last part
-      console.log(decoder.decode(value))
+      // console.log(decoder.decode(value))
       const dataArry = decoder.decode(value).split('data:')
       // iterate dataArry and get the last part
       for (data of dataArry) {
