@@ -151,7 +151,7 @@ async function requestGPTAPI(content, completions, ele) {
   const language = document.getElementById('languages').value
   const system_content =
     'You are a helpful assistant that can analyze text input and generate a concise and coherent summary that captures the main points of the input.'
-  const promptTemplate = `Please summarize the following text, using ${language} only. You may include a brief introduction and conclusion if necessary. Your summary should be no more than 3-5 sentences long and should be in a list format, with each point numbered or bulleted:`
+  const promptTemplate = `Please summarize the following text, using ${language} only. You may include a brief introduction and conclusion if necessary. Your summary should be no more than 3-10 sentences long and should be in a list format, with each point numbered or bulleted:`
   const prompt = `${promptTemplate}\n${content}`
   const messages = [
     { role: 'system', content: system_content },
@@ -160,7 +160,7 @@ async function requestGPTAPI(content, completions, ele) {
   // console.log('messages: ' + messages)
   const url = 'https://api.openai.com/v1/chat/completions'
   const body = {
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-3.5-turbo-16k',
     messages: messages,
     n: completions,
     stream: true,
